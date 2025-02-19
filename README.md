@@ -28,11 +28,11 @@
 
      访问上面的WebDriver下载网址，看到“Stable”下面的支持的Google Chrome最低版本号
 
-     ![配置1](.\assets\配置1.jpg)
+     ![.\assets\配置1.jpg](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E9%85%8D%E7%BD%AE1.jpg)
 
    * 打开自己的Google Chrome，点击“设置-关于Chrome”查看当前版本号是否已更新，即大于等于上面的版本号（一般点进去就会自动更新）
 
-     ![配置1](.\assets\配置2.jpg)
+     ![.\assets\配置2.jpg](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E9%85%8D%E7%BD%AE2.jpg)
 
    * 找到自己的系统规格（win32 / win64）对应的**chromedriver**（注意⚠️是chromedriver，不是chrome也不是chrome-headless-shell ）
 
@@ -56,7 +56,7 @@
 
    如下图
 
-   ![配置3](.\assets\配置3.png)
+   ![.\assets\配置3.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E9%85%8D%E7%BD%AE3.png)
 
 ### 开始运行！
 
@@ -68,7 +68,7 @@ python3 .\clicks_xk.py
 
 如果看到屏幕上弹出来一个Chrome小窗，并加载进入了选课界面，则表示成功～：
 
-![运行1](.\assets\运行1.png)
+![.\assets\运行1.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C1.png)
 
 
 
@@ -76,10 +76,10 @@ python3 .\clicks_xk.py
 
 🌟*建议**小土豆 + 收藏课程**结合使用*
 
-1. 首先运行`clicks-pre.py`，这个脚本回自动打开google的插件商店并搜索小土豆插件（PotatoPlus），并点击下载，因此需要运行前手动**打开魔法**🪜
-2. 在弹出来的窗口点击确认“添加扩展程序”，添加成功即可关闭窗口 并终止运行程序
+1. 首先运行`clicks-pre.py`，这个脚本会自动打开google的插件商店并搜索小土豆插件（PotatoPlus），并点击下载，因此需要运行前手动**打开魔法**🪜
+2. 在弹出来的窗口点击确认“添加扩展程序”，添加成功即可关闭窗口，并终止运行程序
 
-![小土豆](.\assets\小土豆.png)
+![.\assets\小土豆.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E5%B0%8F%E5%9C%9F%E8%B1%86.png)
 
 #### 运行clicks-potato（推荐）
 
@@ -98,7 +98,7 @@ python3 .\clicks-potato.py -c [列名] -t [刷新间隔]
 * 列名：`-c` / `--column`，可选择**公共**（`public`）、**体育**（`sport`）和**收藏**（`favorite`）
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
-![运行2](.\assets\运行2.png)
+![.\assets\运行2.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C2.png)
 
 
 
@@ -117,4 +117,4 @@ python3 .\clicks_xk.py -c [列名] -t [刷新间隔]
 * 列名：`-c` / `--column`，可选择**公共**（`public`）、**体育**（`sport`）
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
-![运行3](.\assets\运行3.png)
+![.\assets\运行3.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C3.png)
