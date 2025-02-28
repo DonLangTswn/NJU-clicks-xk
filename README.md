@@ -1,6 +1,6 @@
 简介：一个利用selenium的自动化补退选脚本工具，助你实现无痛连点抢课～
 
-> 上次更新README：2025.2.19
+> 上次更新README：2025.2.28
 
 ### *写在前面*
 
@@ -8,7 +8,8 @@
 2. 抢课期间请**关闭VPN**等网络系统代理
 3. 后台运行时建议保持屏幕常亮**不睡眠**，否则容易异常终止
 4. 提示「Got one! 」提示不一定是选中了，只是监测到有新课程弹出
-5. 欢迎add issure，期待大神共同修改✨
+5. 若要查看选课结果，请**不要**在脚本开启的Chrome中操作，建议在南大APP中查看
+6. 欢迎add issure，期待大神共同修改✨
 
 ---
 
@@ -83,7 +84,7 @@ python3 .\clicks_xk.py
 
 #### 运行clicks-potato（推荐）
 
-`clicks-potato`脚本会自动打开南大选课网站，需要根据验证码信息在**命令行**手动输入验证码，之后脚本会根据用户指定，到相应的页面进行自动刷新、监测未满课程，并自动点击选择。
+`clicks-potato`脚本会自动打开南大选课网站，第一次运行需要在页面打开“启用 PotatoPlus (Beta)”开关。根据验证码在**命令行**手动输入验证码字母，之后脚本会根据用户指定，到相应的页面进行自动刷新、监测未满课程，并自动点击选择。
 
 脚本依赖于小土豆插件，所以请先完成上一步配置
 
@@ -95,7 +96,7 @@ python3 .\clicks_xk.py
 python3 .\clicks-potato.py -c [列名] -t [刷新间隔]
 ```
 
-* 列名：`-c` / `--column`，可选择**公共**（`public`）、**体育**（`sport`）和**收藏**（`favorite`）
+* 列名：`-c` / `--column`，可选择**通识**（`general`）、**科学之光**（`science`）、**公选**（`public`）、**体育**（`sport`）和**收藏**（`favorite`）
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
 ![.\assets\运行2.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C2.png)
@@ -114,7 +115,7 @@ python3 .\clicks-potato.py -c [列名] -t [刷新间隔]
 python3 .\clicks_xk.py -c [列名] -t [刷新间隔]
 ```
 
-* 列名：`-c` / `--column`，可选择**公共**（`public`）、**体育**（`sport`）
+* 列名：`-c` / `--column`，可选择**通识**（`general`）、**科学之光**（`science`）、**公选**（`public`）、**体育**（`sport`）
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
 ![.\assets\运行3.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C3.png)

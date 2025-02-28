@@ -1,7 +1,7 @@
 """
     The script of automatic course selection in the original xk website page.
 
-    Last updated: 2025.2.19
+    Last updated: 2025.2.28
 """
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -21,9 +21,12 @@ Id = log.read_json('UserId')
 Pwd = log.read_json('PassWd')
 url = log.read_json('url')
 
-COLUMN = 'public'
+COLUMN = 'general'
 columns = {
-    'public':   '//*[@id="cvPageHeadTab"]/li[2]/a',
+    'common':   '//*[@id="cvPageHeadTab"]/li[2]/a',
+    'general':  '//*[@id="course-main"]/div[1]/div[4]/div[1]',
+    'science':  '//*[@id="course-main"]/div[1]/div[4]/div[2]',
+    'public':   '//*[@id="course-main"]/div[1]/div[4]/div[3]',
     'sport':    '//*[@id="cvPageHeadTab"]/li[5]/a',
     'favorite': '//*[@id="cvPageHeadTab"]/li[8]/a'
 }
@@ -163,12 +166,22 @@ def init_xk_page(driver, myId, myPwd):
     start_button.click()
     log.INFO('Starting...')
 
+
+def choose_column(driver, column: str):
+    if column in ['general', 'science', 'public']:
+        time.sleep(0.8)
+        try_to_click(driver, columns['common'], url)
+    time.sleep(0.8)
+    try_to_click(driver, columns[column], url)
+    time.sleep(0.8)
+
+
 def main():
     driver = init_driver()
     init_xk_page(driver, Id, Pwd)
-    time.sleep(1.5)
-    try_to_click(driver, columns[COLUMN], url)
-    time.sleep(1.5)
+    
+    choose_column(driver, COLUMN)
+
     if COLUMN != 'favorite':
         # 点击切换校区
         switch_campus = WebDriverWait(driver, timeout=30).until(
@@ -215,7 +228,7 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--timeout', type=float, default=1.2)
-    parser.add_argument('-c', '--column', type=str, default='public')
+    parser.add_argument('-c', '--column', type=str, default='general')
     args = parser.parse_args()
     TIMEOUT, COLUMN = args.timeout, args.column
 

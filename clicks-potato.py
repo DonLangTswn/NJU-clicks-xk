@@ -1,7 +1,7 @@
 """
-    Clicks-xk, used in combination with the small potato plugin.
+    Clicks-xk, used in combination with the Small Potato plugin.
 
-    Last updated: 2025.2.19
+    Last updated: 2025.2.28
 """
 from selenium import webdriver
 from selenium.common import TimeoutException, JavascriptException
@@ -16,12 +16,7 @@ import argparse
 import time
 
 TIMEOUT = 1.2
-COLUMN = 'public'
-columns = {
-    'public':   '//*[@id="cvPageHeadTab"]/li[2]/a',
-    'sport':    '//*[@id="cvPageHeadTab"]/li[5]/a',
-    'favorite': '//*[@id="cvPageHeadTab"]/li[8]/a'
-}
+COLUMN = 'favorite'
 
 Id = log.read_json('UserId')
 Pwd = log.read_json('PassWd')
@@ -43,9 +38,7 @@ def main():
     driver = click.init_driver(potato=True)
     click.init_xk_page(driver, Id, Pwd)
 
-    time.sleep(0.5)
-    click.try_to_click(driver, columns[COLUMN], url)   # 点击指定页面
-    time.sleep(0.5)
+    click.choose_column(driver, COLUMN)
     # click.try_to_click(driver, dropdown, url)
     # click.try_to_click(driver, potato, url)
     # 点击切换校区
@@ -55,8 +48,8 @@ def main():
     click.try_to_click(driver, filter_chosen, url, script=True)  # 过滤已选
     click.try_to_click(driver, filter_conflict, url, script=True)   # 过滤冲突
     # click.try_to_click(driver, auto, url)           # 自动
-    if COLUMN == 'public':
-        log.CONF()
+    if COLUMN in ['general', 'science', 'public']:
+        log.CONF('Press Enter to confirm to continue...')
     retry = 0
     while True:
         try:
@@ -85,12 +78,12 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--timeout', type=float, default=1.2)
-    parser.add_argument('-c', '--column', type=str, default='public')
+    parser.add_argument('-c', '--column', type=str, default='favorite')
     args = parser.parse_args()
     TIMEOUT, COLUMN = args.timeout, args.column
 
     # check
-    if COLUMN not in columns.keys() or TIMEOUT <= 0:
+    if COLUMN not in click.columns.keys() or TIMEOUT <= 0:
         log.FAIL('Invalid parameter(s) entered by user!')
         exit()
 
