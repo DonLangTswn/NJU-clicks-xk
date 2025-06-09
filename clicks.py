@@ -69,6 +69,7 @@ def init_driver(potato=True):
     opts.add_argument('--disable-application-cache')
     opts.add_argument('--disk-cache-size=0')
     
+
     cache_pt = os.path.join('.', 'webDriver', 'user-data')
     cache_pt = os.path.abspath(cache_pt)
 
@@ -121,6 +122,7 @@ def refresh_while_seeking(driver):
         log.FAIL(f'Failed to click some button while refreshing:\n{e}')
         driver.quit()
         exit()
+
 
 
 def init_xk_page(driver, myId, myPwd):
