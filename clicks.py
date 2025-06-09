@@ -64,22 +64,24 @@ def init_driver(potato=True):
                        If `True`, enables loading from a persistent Chrome user data
                        directory (used to keep login states, extensions, etc.).
     """
-    log.INFO('Initializing webdriver...')
-    opts = Options()
-    
-    cache_pt = os.path.join('.', 'webDriver', 'user-data')
-    cache_pt = os.path.abspath(cache_pt)
+    try:
+        log.INFO('Initializing webdriver...')
+        opts = Options()
+        cache_pt = os.path.join('.', 'webDriver', 'user-data')
+        cache_pt = os.path.abspath(cache_pt)
+        if potato:
+            opts.add_argument(f'user-data-dir={cache_pt}')
 
-    if potato:
-        opts.add_argument(f'user-data-dir={cache_pt}')
-
-    log.INFO('Checking for chrome webdriver updates...')
-    srvc = Service(ChromeDriverManager().install())   # auto download WebDriver
+        log.INFO('Checking for chrome webdriver updates...')
+        srvc = Service(ChromeDriverManager().install())   # auto download WebDriver
+        
+        driver = webdriver.Chrome(service=srvc, options=opts)
+        driver.set_window_size(800, 800)
+        driver.set_window_position(10, 10)
+        return driver
     
-    driver = webdriver.Chrome(service=srvc, options=opts)
-    driver.set_window_size(800, 800)
-    driver.set_window_position(10, 10)
-    return driver
+    except KeyboardInterrupt:
+        log.INFO('Interrupted end.')
     
 
 def try_to_click(driver, xpath, url, script=False, timeout=30):
@@ -132,27 +134,33 @@ def init_xk_page(driver, myId, myPwd):
         log.FAIL('Failed to load njuxk page, please check your connection first.')
         driver.quit()
         exit()
+    
+    try:
+        inputId = WebDriverWait(driver, timeout=30).until(
+            EC.element_to_be_clickable((By.XPATH, '//input[@id="loginName"]'))
+        )
+        inputId.clear()
+        inputId.send_keys(myId)
+        inputPsw = WebDriverWait(driver, timeout=30).until(
+            EC.element_to_be_clickable((By.XPATH, '//input[@id="loginPwd"]'))
+        )
+        inputPsw.clear()
+        inputPsw.send_keys(myPwd)
+        log.INFO('Entering username & password')
 
-    inputId = WebDriverWait(driver, timeout=30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@id="loginName"]'))
-    )
-    inputId.clear()
-    inputId.send_keys(myId)
-    inputPsw = WebDriverWait(driver, timeout=30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@id="loginPwd"]'))
-    )
-    inputPsw.clear()
-    inputPsw.send_keys(myPwd)
-    log.INFO('Entering username & password')
+        # Waiting for the user to complete the verification code.
+        log.WARN('Please complete the verification code by yourself...')
 
-    # Waiting for the user to complete the verification code.
-    log.WARN('Please complete the verification code by yourself...')
+        start_button = WebDriverWait(driver, timeout=300).until(
+            EC.element_to_be_clickable((By.XPATH, '//button[text()="开始选课"]'))
+        )
+        start_button.click()
+        log.INFO('Starting...')
 
-    start_button = WebDriverWait(driver, timeout=300).until(
-        EC.element_to_be_clickable((By.XPATH, '//button[text()="开始选课"]'))
-    )
-    start_button.click()
-    log.INFO('Starting...')
+    except TimeoutException as e:
+        driver.quit()
+        log.FAIL(f'Failed to load some button, TimeoutError:\n{e}')
+        exit()
 
 
 def choose_column(driver, column: str):

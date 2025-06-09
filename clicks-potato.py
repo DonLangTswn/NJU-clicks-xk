@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import myLog as log
-import clicks as click
+import clicks
 import argparse
 import time
 
@@ -29,17 +29,23 @@ switch          = '//span[text()="切换"]'
 xl_campus       = '/html/body/ul/li[3]/div'
 
 def main():
-    driver = click.init_driver(potato=True)
-    click.init_xk_page(driver, Id, Pwd)
+    driver = clicks.init_driver(potato=True)
+    clicks.init_xk_page(driver, Id, Pwd)
 
-    click.choose_column(driver, COLUMN)
+    clicks.choose_column(driver, COLUMN)
     # 点击切换校区
-    click.try_to_click(driver, switch, url, script=True)
-    click.try_to_click(driver, xl_campus, url)    # 选择仙林
-    click.try_to_click(driver, filter_full, url, script=True)    # 过滤已满
-    click.try_to_click(driver, filter_chosen, url, script=True)  # 过滤已选
-    click.try_to_click(driver, filter_conflict, url, script=True)   # 过滤冲突
-    # click.try_to_click(driver, auto, url)           # 自动
+    try:
+        clicks.try_to_click(driver, switch, url, script=True)
+        clicks.try_to_click(driver, xl_campus, url)    # 选择仙林
+        clicks.try_to_click(driver, filter_full, url, script=True)    # 过滤已满
+        clicks.try_to_click(driver, filter_chosen, url, script=True)  # 过滤已选
+        clicks.try_to_click(driver, filter_conflict, url, script=True)   # 过滤冲突
+        # clicks.try_to_click(driver, auto, url)           # 自动
+    except clicks.ClickException as e:
+        log.FAIL(f'Failed to click some button:\n{e}')
+        driver.quit()
+        exit()
+
     if COLUMN in ['general', 'science', 'public']:
         log.CONF('Press Enter to confirm to continue...')
     retry = 0
@@ -57,6 +63,7 @@ def main():
         except KeyboardInterrupt:
             print()
             log.INFO('Interrupted end.')
+            driver.quit()
             exit()
         except TimeoutException:
             retry += 1
@@ -65,7 +72,7 @@ def main():
             retry += 1
             log.INFO(f'Retry for {retry} times...', cover=True)
 
-        click.refresh_while_seeking(driver)
+        clicks.refresh_while_seeking(driver)
 
 
 if __name__ == '__main__':
@@ -76,13 +83,13 @@ if __name__ == '__main__':
     TIMEOUT, COLUMN = args.timeout, args.column
 
     # check
-    if COLUMN not in click.columns.keys() or TIMEOUT <= 0:
+    if COLUMN not in clicks.columns.keys() or TIMEOUT <= 0:
         log.FAIL('Invalid parameter(s) entered by user!')
         exit()
 
     try:
         main()
-    except click.ClickException:
+    except clicks.ClickException:
         log.FAIL('Failed to find some button :(')
         exit()
     except KeyboardInterrupt:
