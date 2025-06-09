@@ -64,18 +64,16 @@ def init_driver(potato=True):
                        If `True`, enables loading from a persistent Chrome user data
                        directory (used to keep login states, extensions, etc.).
     """
+    log.INFO('Initializing webdriver...')
     opts = Options()
-    opts.add_argument('--disable-gpu')
-    opts.add_argument('--disable-application-cache')
-    opts.add_argument('--disk-cache-size=0')
     
-
     cache_pt = os.path.join('.', 'webDriver', 'user-data')
     cache_pt = os.path.abspath(cache_pt)
 
     if potato:
         opts.add_argument(f'user-data-dir={cache_pt}')
 
+    log.INFO('Checking for chrome webdriver updates...')
     srvc = Service(ChromeDriverManager().install())   # auto download WebDriver
     
     driver = webdriver.Chrome(service=srvc, options=opts)
