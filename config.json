@@ -1,7 +1,5 @@
 {
-    "UserId": "221220***",
-    "PassWd": "your-password",
-    "url": "https://xk.nju.edu.cn/xsxkapp/sys/xsxkapp/*default/index.do",
-    "ChromeWebDriverPath": ".\\webDriver\\chromedriver.exe",
-    "ChromeWebCachePath": ".\\webDriver\\user-data"
+    "UserId": "221220070",
+    "PassWd": "b1346790",
+    "url": "https://xk.nju.edu.cn/xsxkapp/sys/xsxkapp/*default/index.do"
 }
