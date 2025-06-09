@@ -58,7 +58,7 @@
 
 `clicks-potato`脚本会自动打开南大选课网站，⚠️**第一次运行需要在页面打开“启用 PotatoPlus (Beta)”开关**。打开后，你需要自己手动点击验证码，完成后点击 **“登录”**。之后脚本会根据用户指定，到相应的页面进行自动刷新、监测未满课程，并自动点击选择。
 
-![./assets/登录.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E7%99%BB%E5%BD%95.png)
+![./assets/登录.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/登录.png)
 
 💡由于选课网站自带的收藏页面没有「过滤已满」和「过滤冲突」选项，且公共、体育等页面常常有少人课、空课霸榜，所以推荐**小土豆 + 收藏页**的方法：先将所有想选的课添加到收藏，之后利用`clicks-potato`选择收藏页，进行自动化选课
 
