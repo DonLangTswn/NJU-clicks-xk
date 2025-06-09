@@ -1,12 +1,9 @@
 """
     Clicks-xk, used in combination with the Small Potato plugin.
 
-    Last updated: 2025.2.28
+    Last updated: 2025.6.9
 """
-from selenium import webdriver
 from selenium.common import TimeoutException, JavascriptException
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -75,6 +72,7 @@ def main():
 
         click.refresh_while_seeking(driver)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--timeout', type=float, default=1.2)
@@ -89,6 +87,9 @@ if __name__ == '__main__':
 
     try:
         main()
+    except click.ClickException:
+        log.FAIL('Failed to find some button :(')
+        exit()
     except KeyboardInterrupt:
         log.INFO('Interrupted end.')
         exit()

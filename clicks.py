@@ -1,7 +1,7 @@
 """
     The script of automatic course selection in the original xk website page.
 
-    Last updated: 2025.2.28
+    Last updated: 2025.6.9
 """
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -14,6 +14,7 @@ import myLog as log
 import argparse
 import time
 import os
+from webdriver_manager.chrome import ChromeDriverManager    # auto update WebDriver
 
 TIMEOUT = 1.2
 
@@ -51,28 +52,35 @@ class ClickException(Exception):
 
 
 def init_driver(potato=False):
+    """
+    Initialize and return a Selenium Chrome WebDriver instance.
+
+    This function sets up a Chrome WebDriver with customized options
+    It uses `webdriver-manager` to 
+    automatically download and manage the correct version of ChromeDriver.
+
+    Args:
+        potato (bool): Use PotatoPlus extension (`Ture`) or not (`False`).
+                       If `True`, enables loading from a persistent Chrome user data
+                       directory (used to keep login states, extensions, etc.).
+    """
     opts = Options()
     opts.add_argument('--disable-gpu')
     opts.add_argument('--disable-application-cache')
     opts.add_argument('--disk-cache-size=0')
     
-    driver_pt = log.read_json("ChromeWebCachePath")
-    cache_pt = log.read_json('ChromeWebDriverPath')
+    driver_pt = os.path.join('.', 'webDriver')
+    cache_pt = os.path.join('.', 'webDriver', 'user-data')
 
-    # check webdriver path
-    if not os.path.exists(driver_pt):
-        log.FAIL("ChromeDriver's path does not exist")
-        exit()
-    if not os.path.exists(cache_pt):
-        log.FAIL("Cache's path does not exist")
-        exit()
     # absolute path
     driver_pt = os.path.abspath(driver_pt)
     cache_pt = os.path.abspath(cache_pt)
 
     if potato:
-        opts.add_argument(f'user-data-dir={driver_pt}')
-    srvc = Service(cache_pt)
+        opts.add_argument(f'user-data-dir={cache_pt}')
+
+    srvc = Service(ChromeDriverManager().install())   # auto download WebDriver
+    
     driver = webdriver.Chrome(service=srvc, options=opts)
     driver.set_window_size(800, 800)
     driver.set_window_position(10, 10)
@@ -109,8 +117,15 @@ def try_to_click(driver, xpath, url, script=False, timeout=30):
     else:
         raise ClickException(xpath)
     
+
 def refresh_while_seeking(driver):
-    try_to_click(driver, '//button[text()="刷新"]', url)
+    try:
+        try_to_click(driver, '//button[text()="刷新"]', url)
+    except ClickException as e:
+        log.FAIL(f'Failed to click some button:\n{e}')
+        driver.quit()
+        exit()
+
 
 def refresh_once_getting(driver):
     driver.refresh()
@@ -120,16 +135,28 @@ def refresh_once_getting(driver):
             EC.element_to_be_clickable((By.XPATH, switch))
         )
         driver.execute_script("arguments[0].click();", switch_campus)
-        try_to_click(driver, xl_campus, url)    # 选择仙林
-        time.sleep(0.6)
-        try_to_click(driver, filter_0, url)
-        # time.sleep(0.2)
-        try_to_click(driver, filter_1, url)
+        try:
+            try_to_click(driver, xl_campus, url)    # 选择仙林
+            time.sleep(0.6)
+            try_to_click(driver, filter_0, url)
+            # time.sleep(0.2)
+            try_to_click(driver, filter_1, url)
+        except ClickException as e:
+            log.FAIL(f'Failed to click some button:\n{e}')
+            driver.quit()
+            exit()
 
 
 def init_xk_page(driver, myId, myPwd):
     log.INFO('Loading page...')
-    driver.get(url)
+
+    try:
+        driver.get(url)
+    except Exception:
+        log.FAIL('Failed to load njuxk page, please check your connection first.')
+        driver.quit()
+        exit()
+
     inputId = WebDriverWait(driver, timeout=30).until(
         EC.element_to_be_clickable((By.XPATH, '//input[@id="loginName"]'))
     )
@@ -141,17 +168,18 @@ def init_xk_page(driver, myId, myPwd):
     inputPsw.clear()
     inputPsw.send_keys(myPwd)
     log.INFO('Entering username & password')
-    code = log.CONF('Give me your VRcode:')
-    vrcode_input = WebDriverWait(driver, timeout=30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@id="verifyCode"]'))
-    )
-    vrcode_input.clear()
-    vrcode_input.send_keys(code)
-    loginBtn = WebDriverWait(driver, timeout=30).until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@id="studentLoginBtn"]'))
-    )
-    loginBtn.click()
-    log.INFO('Logged in.')
+    # code = log.CONF('Give me your VRcode:')
+    # vrcode_input = WebDriverWait(driver, timeout=30).until(
+    #     EC.element_to_be_clickable((By.XPATH, '//input[@id="verifyCode"]'))
+    # )
+    # vrcode_input.clear()
+    # vrcode_input.send_keys(code)
+    # loginBtn = WebDriverWait(driver, timeout=30).until(
+    #     EC.element_to_be_clickable((By.XPATH, '//button[@id="studentLoginBtn"]'))
+    # )
+    # loginBtn.click()
+    # log.INFO('Logged in.')
+    log.WARN('Please complete the verification code by yourself...')
     # term_button = WebDriverWait(driver, timeout=30).until(
     #     EC.element_to_be_clickable((By.XPATH, term))
     # )
@@ -160,7 +188,7 @@ def init_xk_page(driver, myId, myPwd):
     #     EC.element_to_be_clickable((By.XPATH, '//button[text()="确认"]'))
     # )
     # ensure_button.click()
-    start_button = WebDriverWait(driver, timeout=30).until(
+    start_button = WebDriverWait(driver, timeout=300).until(
         EC.element_to_be_clickable((By.XPATH, '//button[text()="开始选课"]'))
     )
     start_button.click()
@@ -168,12 +196,22 @@ def init_xk_page(driver, myId, myPwd):
 
 
 def choose_column(driver, column: str):
-    if column in ['general', 'science', 'public']:
+    """
+    Choose the column in the NJU-xk main-page.
+    """
+    log.INFO(f'Trying to choose column "{column}"')
+    try:
+        if column in ['general', 'science', 'public']:
+            time.sleep(0.8)
+            try_to_click(driver, columns['common'], url)
         time.sleep(0.8)
-        try_to_click(driver, columns['common'], url)
-    time.sleep(0.8)
-    try_to_click(driver, columns[column], url)
-    time.sleep(0.8)
+        try_to_click(driver, columns[column], url)
+        time.sleep(0.8)
+
+    except ClickException as e:
+        log.FAIL(f'Failed to click some button:\n{e}')
+        driver.quit()
+        exit()
 
 
 def main():
