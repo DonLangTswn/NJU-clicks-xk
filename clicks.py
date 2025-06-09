@@ -24,12 +24,12 @@ url = log.read_json('url')
 
 COLUMN = 'general'
 columns = {
-    'common':   '//*[@id="cvPageHeadTab"]/li[2]/a',
-    'general':  '//*[@id="course-main"]/div[1]/div[4]/div[1]',
-    'science':  '//*[@id="course-main"]/div[1]/div[4]/div[2]',
-    'public':   '//*[@id="course-main"]/div[1]/div[4]/div[3]',
-    'sport':    '//*[@id="cvPageHeadTab"]/li[5]/a',
-    'favorite': '//*[@id="cvPageHeadTab"]/li[8]/a'
+    'common':   '//*[@id="cvPageHeadTab"]/li[2]/a',             # 公共
+    'general':  '//*[@id="course-main"]/div[1]/div[4]/div[1]',  # 通识
+    'science':  '//*[@id="course-main"]/div[1]/div[4]/div[2]',  # 科学之光
+    'public':   '//*[@id="course-main"]/div[1]/div[4]/div[3]',  # 公选
+    'sport':    '//*[@id="cvPageHeadTab"]/li[5]/a',             # 体育
+    'favorite': '//*[@id="cvPageHeadTab"]/li[8]/a'              # 收藏
 }
 
 search = '//*[@id="course-main"]/div[1]/div[3]/input'
@@ -51,7 +51,7 @@ class ClickException(Exception):
         return self.msg
 
 
-def init_driver(potato=False):
+def init_driver(potato=True):
     """
     Initialize and return a Selenium Chrome WebDriver instance.
 
@@ -69,11 +69,8 @@ def init_driver(potato=False):
     opts.add_argument('--disable-application-cache')
     opts.add_argument('--disk-cache-size=0')
     
-    driver_pt = os.path.join('.', 'webDriver')
-    cache_pt = os.path.join('.', 'webDriver', 'user-data')
 
-    # absolute path
-    driver_pt = os.path.abspath(driver_pt)
+    cache_pt = os.path.join('.', 'webDriver', 'user-data')
     cache_pt = os.path.abspath(cache_pt)
 
     if potato:
@@ -122,29 +119,10 @@ def refresh_while_seeking(driver):
     try:
         try_to_click(driver, '//button[text()="刷新"]', url)
     except ClickException as e:
-        log.FAIL(f'Failed to click some button:\n{e}')
+        log.FAIL(f'Failed to click some button while refreshing:\n{e}')
         driver.quit()
         exit()
 
-
-def refresh_once_getting(driver):
-    driver.refresh()
-    if COLUMN != 'favorite':
-        # 点击切换校区
-        switch_campus = WebDriverWait(driver, timeout=30).until(
-            EC.element_to_be_clickable((By.XPATH, switch))
-        )
-        driver.execute_script("arguments[0].click();", switch_campus)
-        try:
-            try_to_click(driver, xl_campus, url)    # 选择仙林
-            time.sleep(0.6)
-            try_to_click(driver, filter_0, url)
-            # time.sleep(0.2)
-            try_to_click(driver, filter_1, url)
-        except ClickException as e:
-            log.FAIL(f'Failed to click some button:\n{e}')
-            driver.quit()
-            exit()
 
 
 def init_xk_page(driver, myId, myPwd):
@@ -168,26 +146,10 @@ def init_xk_page(driver, myId, myPwd):
     inputPsw.clear()
     inputPsw.send_keys(myPwd)
     log.INFO('Entering username & password')
-    # code = log.CONF('Give me your VRcode:')
-    # vrcode_input = WebDriverWait(driver, timeout=30).until(
-    #     EC.element_to_be_clickable((By.XPATH, '//input[@id="verifyCode"]'))
-    # )
-    # vrcode_input.clear()
-    # vrcode_input.send_keys(code)
-    # loginBtn = WebDriverWait(driver, timeout=30).until(
-    #     EC.element_to_be_clickable((By.XPATH, '//button[@id="studentLoginBtn"]'))
-    # )
-    # loginBtn.click()
-    # log.INFO('Logged in.')
+
+    # Waiting for the user to complete the verification code.
     log.WARN('Please complete the verification code by yourself...')
-    # term_button = WebDriverWait(driver, timeout=30).until(
-    #     EC.element_to_be_clickable((By.XPATH, term))
-    # )
-    # term_button.click()
-    # ensure_button = WebDriverWait(driver, timeout=30).until(
-    #     EC.element_to_be_clickable((By.XPATH, '//button[text()="确认"]'))
-    # )
-    # ensure_button.click()
+
     start_button = WebDriverWait(driver, timeout=300).until(
         EC.element_to_be_clickable((By.XPATH, '//button[text()="开始选课"]'))
     )
@@ -211,72 +173,4 @@ def choose_column(driver, column: str):
     except ClickException as e:
         log.FAIL(f'Failed to click some button:\n{e}')
         driver.quit()
-        exit()
-
-
-def main():
-    driver = init_driver()
-    init_xk_page(driver, Id, Pwd)
-    
-    choose_column(driver, COLUMN)
-
-    if COLUMN != 'favorite':
-        # 点击切换校区
-        switch_campus = WebDriverWait(driver, timeout=30).until(
-            EC.element_to_be_clickable((By.XPATH, switch))
-        )
-        driver.execute_script("arguments[0].click();", switch_campus)
-        try_to_click(driver, xl_campus, url)    # 选择仙林
-        time.sleep(0.6)
-        try_to_click(driver, filter_0, url)
-        # time.sleep(0.2)
-        try_to_click(driver, filter_1, url)
-        time.sleep(0.6)
-
-    refresh = 0
-    while True:
-        try:
-            if refresh >= 100 and refresh % 100 == 0 and COLUMN != 'favorite':
-                time.sleep(0.8)
-                try_to_click(driver, filter_0, url)
-                time.sleep(0.8)
-                try_to_click(driver, filter_0, url)
-                time.sleep(0.8)
-
-            select = WebDriverWait(driver, timeout=TIMEOUT).until(
-                EC.element_to_be_clickable((By.XPATH, '//a[text()="选择"][1]'))
-            )
-            select.click()
-        except TimeoutException:
-            refresh += 1
-            log.INFO(f'Refreshed at {refresh} times...', cover=True)
-            refresh_while_seeking(driver)
-            time.sleep(0.2)
-            continue
-
-        try_to_click(driver, final_ensure, url)
-        print()
-        log.DONE('Got one!')
-        time.sleep(1)
-        refresh = 0
-        log.INFO(f'Refreshed at {refresh} times...', cover=True)
-        refresh_once_getting(driver)
-        # break
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--timeout', type=float, default=1.2)
-    parser.add_argument('-c', '--column', type=str, default='general')
-    args = parser.parse_args()
-    TIMEOUT, COLUMN = args.timeout, args.column
-
-    # check parameters inpupt
-    if COLUMN not in columns.keys() or TIMEOUT <= 0:
-        log.FAIL('Invalid parameter(s) entered by user!')
-        exit()
-
-    try:
-        main()
-    except KeyboardInterrupt:
-        log.INFO('Interrupted end.')
         exit()

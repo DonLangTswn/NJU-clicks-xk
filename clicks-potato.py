@@ -1,5 +1,5 @@
 """
-    Clicks-xk, used in combination with the Small Potato plugin.
+    Clicks-xk, used in combination with the PotatoPlus plugin.
 
     Last updated: 2025.6.9
 """
@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import myLog as log
-import clicks_xk as click
+import clicks as click
 import argparse
 import time
 
@@ -19,25 +19,20 @@ Id = log.read_json('UserId')
 Pwd = log.read_json('PassWd')
 url = log.read_json('url')
 
-search = '//*[@id="course-main"]/div[1]/div[3]/input'
-term = '/html/body/div[4]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[1]/div/input'
-# dropdown = '/html/body/div[1]/header/div[3]/div/div[3]/div[1]'
-# potato = '//div[text()="启用 PotatoPlus (Beta)"]'
-# auto = '//div[text()="手动"]'
-filter_full = '//*[@id="pjw-filter-avail-switch"]/div[2]/div/div[2]'
-filter_chosen = '//*[@id="pjw-deselect-switch-box"]/label'
+search          = '//*[@id="course-main"]/div[1]/div[3]/input'
+term            = '/html/body/div[4]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[1]/div/input'
+filter_full     = '//*[@id="pjw-filter-avail-switch"]/div[2]/div/div[2]'
+filter_chosen   = '//*[@id="pjw-deselect-switch-box"]/label'
 filter_conflict = '//*[@id="pjw-filter-hours-switch"]/div[2]/div/div[1]'
-select_first =  '//*[@id="course-main"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[3]/div[1]/button/div[1]'
-switch = '//span[text()="切换"]'
-xl_campus = '/html/body/ul/li[3]/div'
+select_first    =  '//*[@id="course-main"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[3]/div[1]/button/div[1]'
+switch          = '//span[text()="切换"]'
+xl_campus       = '/html/body/ul/li[3]/div'
 
 def main():
     driver = click.init_driver(potato=True)
     click.init_xk_page(driver, Id, Pwd)
 
     click.choose_column(driver, COLUMN)
-    # click.try_to_click(driver, dropdown, url)
-    # click.try_to_click(driver, potato, url)
     # 点击切换校区
     click.try_to_click(driver, switch, url, script=True)
     click.try_to_click(driver, xl_campus, url)    # 选择仙林

@@ -20,7 +20,7 @@ ensure_package('filelock')
 ensure_package('webdriver_manager')
 
 import time
-import clicks_xk as click
+import clicks as click
 import myLog as log
 
 url = 'https://chromewebstore.google.com/search/PotatoPlus?utm_source=ext_app_menu'
