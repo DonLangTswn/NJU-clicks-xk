@@ -47,3 +47,4 @@ def read_json(key: str, path = 'config.json'):
                 FAIL(f'KeyError while reading: key=\"{key}\"')
     except IOError as e:
         FAIL(f'<JSON>: Error while reading: {e}')
+        exit()

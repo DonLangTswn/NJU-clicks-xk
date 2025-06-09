@@ -29,6 +29,10 @@ switch          = '//span[text()="切换"]'
 xl_campus       = '/html/body/ul/li[3]/div'
 
 def main():
+    Id =  log.read_json('UserId')
+    Pwd = log.read_json('PassWd')
+    url = log.read_json('url')
+    
     driver = clicks.init_driver(potato=True)
     clicks.init_xk_page(driver, Id, Pwd)
 
