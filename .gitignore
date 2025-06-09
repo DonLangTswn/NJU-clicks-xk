@@ -2,3 +2,4 @@
 __pycache__
 *.lock
 webDriver/user-data
+**.DS_Store
