@@ -30,7 +30,7 @@
 
    如下图
 
-   ![./assets/配置.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E9%85%8D%E7%BD%AE.png)
+   ![./assets/配置.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/配置.png)
 
 
 
@@ -50,7 +50,7 @@
 
 4. 在弹出来的窗口**点击确认“添加扩展程序”**，添加成功即可通过 `Ctrl+C` 终止运行程序
 
-![./assets/小土豆.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E5%B0%8F%E5%9C%9F%E8%B1%86.png)
+![./assets/小土豆.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/小土豆.png)
 
 #### 运行clicks-potato
 
@@ -71,6 +71,6 @@ python3 clicks-potato.py -c [列名] -t [刷新间隔]
 * 列名：`-c` / `--column`，可选择**通识**（`general`）、**科学之光**（`science`）、**公选**（`public`）、**体育**（`sport`）和**收藏**（`favorite`）
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
-![./assets/运行.png](https://github.com/DonLangTswn/NJU-clicks-xk/blob/main/assets/%E8%BF%90%E8%A1%8C.png)
+![./assets/运行.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/运行.png)
 
 
