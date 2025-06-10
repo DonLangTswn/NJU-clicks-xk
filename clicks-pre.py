@@ -1,8 +1,9 @@
 """
     Run when you first use clicks with potatos.
-    Firstly check your python dependencies.
+    Firstly check & download user's python dependencies.
+    Download PotatoPlus plugin on user's chrome driver.
 
-    Last updated: 2025.6.9
+    Last updated: 2025.6.10
 """
 import sys
 import subprocess
@@ -14,37 +15,31 @@ def ensure_package(pkg):
     except ImportError:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', pkg])
 
+print('[INFO]:  Checking the dependencies...')
 ensure_package('selenium')
 ensure_package('colorama')
 ensure_package('filelock')
 ensure_package('webdriver_manager')
+print('[DONE]:  Dependency check done.')
 
 import time
 import clicks
 import myLog as log
 
-url = 'https://chromewebstore.google.com/search/PotatoPlus?utm_source=ext_app_menu'
-rectangle = '//*[@id="yDmH0d"]/c-wiz/div/div/div/main/section/div[1]/div/a'
+url = 'https://chromewebstore.google.com/detail/potatoplus/mokphlegfcilcbnjmhgfikjgnbnconba?hl=zh-CN&utm_source=ext_sidebar'
 addChrome = '//*[@id="yDmH0d"]/c-wiz/div/div/main/div/section[1]/section/div/div[1]/div[2]/div/button/span[6]'
 
 try:
     driver = clicks.init_driver(potato=True)
+    log.INFO('Trying to open the plugin page...')
     driver.get(url)
-    time.sleep(1.2)
-    log.INFO('Clicking the "PotatoPlus"...')
-    clicks.try_to_click(driver, rectangle, url)
-    time.sleep(1.2)
-    log.INFO('Clicking to add to your Chrome...')
-    clicks.try_to_click(driver, addChrome, url)
-    log.DONE('Please click to confirm the addition...')
-    time.sleep(3)
+
+    time.sleep(1)
+    clicks.try_to_click(driver, addChrome ,url, script=True)
+
+    log.INFO('Please press "添加扩展程序" button to ensure :)')
     log.DONE('Use ctrl+C to finish.')
     time.sleep(3000)
-
-except clicks.ClickException:
-    log.FAIL('Failed to click to download PotatoPlus, check your connection first.')
-    driver.quit()
-    exit()
 
 except KeyboardInterrupt:
     log.DONE('Exited.')

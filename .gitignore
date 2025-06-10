@@ -1,5 +1,5 @@
 .venv
 __pycache__
 *.lock
-webDriver/user-data
+webDriver/
 **.DS_Store

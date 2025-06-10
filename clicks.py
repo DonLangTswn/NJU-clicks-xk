@@ -1,7 +1,7 @@
 """
     The script of automatic course selection in the original xk website page.
 
-    Last updated: 2025.6.9
+    Last updated: 2025.6.10
 """
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -17,10 +17,6 @@ import os
 from webdriver_manager.chrome import ChromeDriverManager    # auto update WebDriver
 
 TIMEOUT = 1.2
-
-Id = log.read_json('UserId')
-Pwd = log.read_json('PassWd')
-url = log.read_json('url')
 
 COLUMN = 'general'
 columns = {
@@ -115,7 +111,7 @@ def try_to_click(driver, xpath, url, script=False, timeout=30):
         raise ClickException(xpath)
     
 
-def refresh_while_seeking(driver):
+def refresh_while_seeking(driver, url):
     try:
         try_to_click(driver, '//button[text()="刷新"]', url)
     except ClickException as e:
@@ -124,8 +120,7 @@ def refresh_while_seeking(driver):
         exit()
 
 
-
-def init_xk_page(driver, myId, myPwd):
+def init_xk_page(driver, myId, myPwd, url):
     log.INFO('Loading page...')
 
     try:
@@ -163,7 +158,7 @@ def init_xk_page(driver, myId, myPwd):
         exit()
 
 
-def choose_column(driver, column: str):
+def choose_column(driver, column: str, url):
     """
     Choose the column in the NJU-xk main-page.
     """

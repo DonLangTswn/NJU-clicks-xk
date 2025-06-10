@@ -1,7 +1,7 @@
 """
     Clicks-xk, used in combination with the PotatoPlus plugin.
 
-    Last updated: 2025.6.9
+    Last updated: 2025.6.10
 """
 from selenium.common import TimeoutException, JavascriptException
 from selenium.webdriver.common.by import By
@@ -14,10 +14,6 @@ import time
 
 TIMEOUT = 1.2
 COLUMN = 'favorite'
-
-Id = log.read_json('UserId')
-Pwd = log.read_json('PassWd')
-url = log.read_json('url')
 
 search          = '//*[@id="course-main"]/div[1]/div[3]/input'
 term            = '/html/body/div[4]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[1]/div/input'
@@ -32,18 +28,16 @@ def main():
     Id =  log.read_json('UserId')
     Pwd = log.read_json('PassWd')
     url = log.read_json('url')
-    
-    driver = clicks.init_driver(potato=True)
-    clicks.init_xk_page(driver, Id, Pwd)
 
-    clicks.choose_column(driver, COLUMN)
-    # 点击切换校区
+    driver = clicks.init_driver(potato=True)
+    clicks.init_xk_page(driver, Id, Pwd, url)
+    clicks.choose_column(driver, COLUMN, url)
     try:
-        clicks.try_to_click(driver, switch, url, script=True)
-        clicks.try_to_click(driver, xl_campus, url)    # 选择仙林
-        clicks.try_to_click(driver, filter_full, url, script=True)    # 过滤已满
-        clicks.try_to_click(driver, filter_chosen, url, script=True)  # 过滤已选
-        clicks.try_to_click(driver, filter_conflict, url, script=True)   # 过滤冲突
+        clicks.try_to_click(driver, switch, url, script=True)   # 点击切换校区
+        clicks.try_to_click(driver, xl_campus, url)             # 选择仙林
+        clicks.try_to_click(driver, filter_full, url, script=True)      # 过滤已满
+        clicks.try_to_click(driver, filter_chosen, url, script=True)    # 过滤已选
+        clicks.try_to_click(driver, filter_conflict, url, script=True)  # 过滤冲突
         # clicks.try_to_click(driver, auto, url)           # 自动
     except clicks.ClickException as e:
         log.FAIL(f'Failed to click some button:\n{e}')
@@ -69,14 +63,11 @@ def main():
             log.INFO('Interrupted end.')
             driver.quit()
             exit()
-        except TimeoutException:
-            retry += 1
-            log.INFO(f'Retry for {retry} times...', cover=True)
-        except JavascriptException:
+        except (TimeoutException, JavascriptException):
             retry += 1
             log.INFO(f'Retry for {retry} times...', cover=True)
 
-        clicks.refresh_while_seeking(driver)
+        clicks.refresh_while_seeking(driver, url)
 
 
 if __name__ == '__main__':
