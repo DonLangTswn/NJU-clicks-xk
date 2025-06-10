@@ -41,6 +41,12 @@ try:
     log.DONE('Use ctrl+C to finish.')
     time.sleep(3000)
 
+
+except Exception as e:
+    log.FAIL("Failed to load, please check your connection first.")
+    driver.quit()
+    exit()
+
 except KeyboardInterrupt:
     log.DONE('Exited.')
     driver.quit()
