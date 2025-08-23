@@ -1,5 +1,6 @@
 {
-    "UserId": "221220***",
-    "PassWd": "my-password",
+    "UserId": "221220000",
+    "PassWd": "your-password",
+    "Campus": "XL",
     "url": "https://xk.nju.edu.cn/xsxkapp/sys/xsxkapp/*default/index.do"
 }

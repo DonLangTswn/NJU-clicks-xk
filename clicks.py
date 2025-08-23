@@ -1,7 +1,7 @@
 """
     The script of automatic course selection in the original xk website page.
 
-    Last updated: 2025.6.10
+    Last updated: 2025.8.23
 """
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -16,16 +16,16 @@ import time
 import os
 from webdriver_manager.chrome import ChromeDriverManager    # auto update WebDriver
 
-TIMEOUT = 1.2
-
-COLUMN = 'general'
 columns = {
-    'common':   '//*[@id="cvPageHeadTab"]/li[2]/a',             # 公共
-    'general':  '//*[@id="course-main"]/div[1]/div[4]/div[1]',  # 通识
-    'science':  '//*[@id="course-main"]/div[1]/div[4]/div[2]',  # 科学之光
-    'public':   '//*[@id="course-main"]/div[1]/div[4]/div[3]',  # 公选
-    'sport':    '//*[@id="cvPageHeadTab"]/li[5]/a',             # 体育
-    'favorite': '//*[@id="cvPageHeadTab"]/li[8]/a'              # 收藏
+    'common':   '//a[text()="公共"]',           # 公共
+    'general':  '//div[text()="导学/研讨/通识"]', # 通识
+    'science':  '//div[text()="科学之光"]',     # 科学之光
+    'public':   '//div[text()="公选课"]',       # 公选
+    'sport':    '//a[text()="体育"]',           # 体育
+    'favorite': '//a[text()="收藏"]'            # 收藏
+}
+campus_no = {
+    'GL': 1, 'PK': 2, 'XL': 3, 'SZ': 4
 }
 
 search = '//*[@id="course-main"]/div[1]/div[3]/input'
@@ -33,7 +33,6 @@ term = '/html/body/div[4]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[1]/div/inpu
 filter_0 = '//*[@id="course-main"]/div[2]/div[1]/div[1]/div/div[2]'
 filter_1 = '//*[@id="course-main"]/div[2]/div[1]/div[1]/div/div[3]'
 switch = '//span[text()="切换"]'
-xl_campus = '/html/body/ul/li[3]/div'
 final_ensure = '//*[@id="cvDialog"]/div[2]/div[2]/div[1]'
 
 class ClickException(Exception):
