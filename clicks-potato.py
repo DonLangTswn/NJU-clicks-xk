@@ -1,7 +1,7 @@
 """
     Clicks-xk, used in combination with the PotatoPlus plugin.
 
-    Last updated: 2025.6.10
+    Last updated: 2025.8.23
 """
 from selenium.common import TimeoutException, JavascriptException
 from selenium.webdriver.common.by import By
@@ -22,19 +22,25 @@ filter_chosen   = '//*[@id="pjw-deselect-switch-box"]/label'
 filter_conflict = '//*[@id="pjw-filter-hours-switch"]/div[2]/div/div[1]'
 select_first    =  '//*[@id="course-main"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[3]/div[1]/button/div[1]'
 switch          = '//span[text()="切换"]'
-xl_campus       = '/html/body/ul/li[3]/div'
 
 def main():
     Id =  log.read_json('UserId')
     Pwd = log.read_json('PassWd')
+    Cam = log.read_json('Campus')
     url = log.read_json('url')
+    try:
+        campus = f'/html/body/ul/li[{clicks.campus_no[Cam]}]/div'   # 校区xpath
+    except KeyError:
+        log.FAIL("Invalid Campus Code! [鼓楼: \"GL\", 浦口: \"PK\", 仙林: \"XL\", 苏州: \"SZ\"]")
+        exit()
 
     driver = clicks.init_driver(potato=True)
     clicks.init_xk_page(driver, Id, Pwd, url)
     clicks.choose_column(driver, COLUMN, url)
+
     try:
         clicks.try_to_click(driver, switch, url, script=True)   # 点击切换校区
-        clicks.try_to_click(driver, xl_campus, url)             # 选择仙林
+        clicks.try_to_click(driver, campus, url)                # 选择校区
         clicks.try_to_click(driver, filter_full, url, script=True)      # 过滤已满
         clicks.try_to_click(driver, filter_chosen, url, script=True)    # 过滤已选
         clicks.try_to_click(driver, filter_conflict, url, script=True)  # 过滤冲突
@@ -73,7 +79,7 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--timeout', type=float, default=1.2)
-    parser.add_argument('-c', '--column', type=str, default='favorite')
+    parser.add_argument('-c', '--column', type=str, default='favorite', choices=['general', 'science', 'public', 'sport', 'favorite'])
     args = parser.parse_args()
     TIMEOUT, COLUMN = args.timeout, args.column
 
