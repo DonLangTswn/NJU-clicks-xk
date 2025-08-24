@@ -20,7 +20,7 @@ term            = '/html/body/div[4]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[
 filter_full     = '//*[@id="pjw-filter-avail-switch"]/div[2]/div/div[2]'
 filter_chosen   = '//*[@id="pjw-deselect-switch-box"]/label'
 filter_conflict = '//*[@id="pjw-filter-hours-switch"]/div[2]/div/div[1]'
-select_first    =  '//*[@id="course-main"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[3]/div[1]/button/div[1]'
+select_first    = '//*[@id="course-main"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[3]/div[1]/button/div[1]'
 switch          = '//span[text()="切换"]'
 
 def main():
@@ -31,7 +31,7 @@ def main():
     try:
         campus = f'/html/body/ul/li[{clicks.campus_no[Cam]}]/div'   # 校区xpath
     except KeyError:
-        log.FAIL("Invalid Campus Code! [鼓楼: \"GL\", 浦口: \"PK\", 仙林: \"XL\", 苏州: \"SZ\"]")
+        log.FAIL(f"Invalid campus code '{Cam}', please choose from [鼓楼: \"GL\", 浦口: \"PK\", 仙林: \"XL\", 苏州: \"SZ\"]")
         exit()
 
     driver = clicks.init_driver(potato=True)
