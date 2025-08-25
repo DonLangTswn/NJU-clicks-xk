@@ -43,7 +43,7 @@ try:
 
 
 except Exception as e:
-    log.FAIL("Failed to load, please check your connection first.")
+    log.FAIL(f"Failed to load, please check your connection first.\n{e}")
     driver.quit()
     exit()
 
