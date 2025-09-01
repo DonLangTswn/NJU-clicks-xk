@@ -1,8 +1,25 @@
 """
     The script WITHOUT PotatoPlus plugin, in the original xk website page.
 
-    Last updated: 2025.8.25
+    Last updated: 2025.9.1
 """
+import sys
+import subprocess
+
+# check dependencies
+def ensure_package(pkg):
+    try:
+        __import__(pkg)
+    except ImportError:
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', pkg])
+
+print('[INFO]:  Checking the dependencies...')
+ensure_package('selenium')
+ensure_package('colorama')
+ensure_package('filelock')
+ensure_package('webdriver_manager')
+print('[DONE]:  Dependency check done.')
+
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
