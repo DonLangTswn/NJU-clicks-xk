@@ -2,7 +2,7 @@
 
 > 上次更新 README：2025.8.25
 > 
-> ⚠️8.25：**发现小土豆插件在选课时会报错**，因此`clicks-potato.py`似乎不可用了，建议暂时使用不依赖小土豆插件的`clicks-no-potato.py`，静待小土豆插件恢复……
+> ❌8.25：**发现小土豆插件在选课时会报错**，因此`clicks-potato.py`似乎不可用了，建议暂时使用不依赖小土豆插件的`clicks-no-potato.py`，静待小土豆插件恢复……
 
 ### *写在前面*
 
@@ -11,6 +11,8 @@
 3. 🌟 建议**小土豆插件 + 收藏课程**结合使用
 4. 提示「Got one! 」不一定是选中了，只是监测到有新课程弹出
 5. 若要查看选课结果，请**不要**在脚本开启的Chrome中操作，建议在南大APP中查看
+
+> **⚠️ 此脚本仅作为辅助工具，供学习交流使用。杜绝一切恶性竞争、恶意扰乱系统的行为！**
 
 *\*欢迎 add issues，期待大神共同修改*✨
 
@@ -56,6 +58,28 @@
 
 ![./assets/小土豆.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/小土豆.png)
 
+
+#### 运行clicks-no-potato
+
+> ⚠️小土豆插件故障时临时启用，建议在插件恢复正常时仍使用`click-potato.py`
+
+脚本不依赖于小土豆插件，直接通过南大选课网站页面进行，因此**无法在收藏页**进行筛选。无小土豆插件、直接在南大选课网站页面操作触发系统报错几率较高，因此建议刷新时间不要太短。
+
+**运行方式**：
+
+指令和`clicks-potato.py`大致相同：
+
+```shell
+python3 .\clicks-no-potato.py -c [列名] -t [刷新间隔]
+# 默认：column = 'general', timeout = 1.2
+python3 clicks-no-potato.py
+```
+
+* 列名：`-c` / `--column`，可选择**通识**（`general`）、**科学之光**（`science`）、**公选**（`public`）、**体育**（`sport`）
+
+* 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
+
+
 #### 运行clicks-potato
 
 脚本依赖于小土豆插件，所以请先完成上一步配置
@@ -80,24 +104,3 @@ python3 clicks-potato.py
 * 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
 
 ![./assets/运行.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/运行.png)
-
-
-
-#### 运行clicks-no-potato
-
-> ⚠️小土豆插件故障时临时启用，建议在插件恢复正常时仍使用`click-potato.py`
-
-脚本不依赖于小土豆插件，直接通过南大选课网站页面进行，因此**无法在收藏页**进行筛选。无小土豆插件、直接在南大选课网站页面操作触发系统报错几率较高，因此建议刷新时间不要太短。
-
-**运行方式**：
-
-指令和`clicks-potato.py`大致相同：
-
-```shell
-python3 .\clicks-no-potato.py -c [列名] -t [刷新间隔]
-# 默认：column = 'general', timeout = 1.2
-python3 clicks-no-potato.py
-```
-
-* 列名：`-c` / `--column`，可选择**通识**（`general`）、**科学之光**（`science`）、**公选**（`public`）、**体育**（`sport`）
-* 刷新间隔时间：`-t` / `--timeout`，≥ 0.6（s），建议在1s左右最稳定
