@@ -1,6 +1,6 @@
 简介：一个利用selenium的自动化补退选脚本工具，助你实现无痛连点补退选～
 
-> 上次更新 README：2025.9.1
+> 上次更新 README：2025.9.16
 > 
 > ❌8.25：**发现小土豆插件在选课时会报错**，因此`clicks-potato.py`似乎不可用了，建议暂时使用不依赖小土豆插件的`clicks-no-potato.py`，静待小土豆插件恢复……
 
@@ -46,6 +46,10 @@
 
 脚本不依赖于小土豆插件，无需下载插件，直接通过南大选课网站页面进行，因此**无法在收藏页**进行筛选。无小土豆插件、直接在南大选课网站页面操作触发系统报错几率较高，因此建议刷新时间不要太短。
 
+`clicks-no-potato`脚本会自动打开南大选课网站，你需要自己**手动点击验证码**，完成后点击 **“登录”**。之后脚本会根据用户指定，到相应的页面进行自动刷新、监测未满课程，并自动点击选择。
+
+![./assets/登录.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/登录.png)
+
 **运行方式**：
 
 指令和`clicks-potato.py`大致相同：
@@ -81,6 +85,7 @@ python3 clicks-no-potato.py
 > 你也可以在弹出的 chrome 浏览器中手动搜索添加小土豆插件，不过一定要在脚本弹出的浏览器中添加；另外要确保前面的 python 依赖检测通过
 
 ![./assets/小土豆.png](https://raw.githubusercontent.com/DonLangTswn/NJU-clicks-xk/main/assets/小土豆.png)
+
 
 
 #### 运行`clicks-potato`脚本
